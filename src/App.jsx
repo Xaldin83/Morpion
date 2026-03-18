@@ -28,6 +28,8 @@ export default function App(){
 
   const [board,setBoard] = useState(Array(9).fill(null))
   const [isX, setIsX] = useState(true)
+  const [scoreX, setScoreX] = useState(0)
+  const [scoreY, setScoreY] = useState(0)
 
   const winner = getWinner(board)
   const isDraw = !winner && board.every(Boolean)
@@ -55,6 +57,8 @@ export default function App(){
   return (
     <div className="game">
       <h1>Morpion</h1>
+
+      <p className="score"><img className="status-img" src="/autobot.png"/> : {scoreX} - {scoreY} : <img className="status-img" src="/decepticon.png"/></p>
       <p className="status">
         {winner ? 
         <span>Gagnant : <img className="status-img" src={winner==='X'?'/autobot.png':'/decepticon.png'}/></span>
