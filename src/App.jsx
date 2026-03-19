@@ -7,20 +7,9 @@ const WINNING_LINES  = [
   [0,4,8],[2,4,6]          //diagonales
 ]
 
-function getWinner(board){
-  //Parcourir chaque ligne gagnante possible définie dans WINNING_LINES
-  //Chaque ligne est un tableau de 3 indices [a,b,c] représentant les positions à vérifier.
 
-  for (const [a,b,c] of WINNING_LINES) {
-    //Vérifie si les trois conditios sont remplies pour une victoire
-    // 1. board[a] n'est pas null
-    // 2. board[a] === board[b] === board[c]
-    if(board[a] && board[a]===board[b] && board[a]===board[c]) //Si les trois cases contiennent le même symbole
-      return board[a] //On retourne le symbole gagnant
 
-  }
-  return null
-}
+  
 
 export default function App(){
   
@@ -28,40 +17,66 @@ export default function App(){
 
   const [board,setBoard] = useState(Array(9).fill(null))
   const [isX, setIsX] = useState(true)
-  const [scoreX, setScoreX] = useState(0)
-  const [scoreY, setScoreY] = useState(0)
-
+  const [score, setScore]=useState([0,0])
+  
   const winner = getWinner(board)
+  // const {scoresX,scoresY,loading,error}=useScore(winner,scoreX,scoreY)
   const isDraw = !winner && board.every(Boolean)
 
   function reset(){
     setBoard(Array(9).fill(null))
     setIsX(true)
+
+    return
+    }
+  
+
+  function getWinner(board){
+    //Parcourir chaque ligne gagnante possible définie dans WINNING_LINES
+    //Chaque ligne est un tableau de 3 indices [a,b,c] représentant les positions à vérifier.
+
+    for (const [a,b,c] of WINNING_LINES) {
+      //Vérifie si les trois conditios sont remplies pour une victoire
+      // 1. board[a] n'est pas null
+      // 2. board[a] === board[b] === board[c]
+      if(board[a] && board[a]===board[b] && board[a]===board[c]){ //Si les trois cases contiennent le même symbole
+        // console.log(board[a])
+        return board[a] //On retourne le symbole gagnant
+      }
+
+    }
+    return null
   }
 
   function handleClick(i){
     //Vérificaiton case
 
-    if(board[i] || winner)
+    if(board[i]||winner)
       return
     //Est-ce qu'il y a un vainqueur?
     // Case sélectionné 
     // Joueur qui joue
 
     const newBoard = [...board] //copie du tableau pour le modifier
-    newBoard[i]=isX?'X':'0'
+    newBoard[i]=isX?'X':'O'
     setBoard(newBoard)
     setIsX(!isX)
+    const newWinner = getWinner(newBoard)
+    if(newWinner==='X')
+      setScore(s=>[s[0]+1,s[1]])
+    else if(newWinner==='O')
+      setScore(s=>[s[0],s[1]+1])
+
   }
 
   return (
     <div className="game">
       <h1>Morpion</h1>
 
-      <p className="score"><img className="status-img" src="/autobot.png"/> : {scoreX} - {scoreY} : <img className="status-img" src="/decepticon.png"/></p>
+      <p className="score"><img className="status-img" src="/autobot.png"/> : {score[0]} --- {score[1]} : <img className="status-img" src="/decepticon.png"/></p>
       <p className="status">
-        {winner ? 
-        <span>Gagnant : <img className="status-img" src={winner==='X'?'/autobot.png':'/decepticon.png'}/></span>
+        {winner ? (
+        <span>Gagnant : <img className="status-img" src={winner==='X'?'/autobot.png':'/decepticon.png'}/></span>) 
         : isDraw? "Match Null !"
         :<span>Tour du joueur : <img className="status-img" src={isX?'/autobot.png':'/decepticon.png'}/></span>
         }
