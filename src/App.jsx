@@ -18,7 +18,8 @@ export default function App(){
   const [board,setBoard] = useState(Array(9).fill(null))
   const [isX, setIsX] = useState(true)
   const [score, setScore]=useState([0,0])
-  
+  const [withBot, setWithBot]=useState(false)
+
   const winner = getWinner(board)
   // const {scoresX,scoresY,loading,error}=useScore(winner,scoreX,scoreY)
   const isDraw = !winner && board.every(Boolean)
@@ -29,6 +30,10 @@ export default function App(){
 
     return
     }
+
+  function playerBot(){
+    setWithBot(!withBot)
+  }
   
 
   function getWinner(board){
@@ -89,6 +94,14 @@ export default function App(){
         ))}
       </div>
       <button className="reset" onClick={reset}>Rejouer</button>
+
+      <button className="reset" onClick={playerBot}>Jouer contre le bot</button>
+      <p>
+        {!withBot ? (
+        <span>Mode 2 joueurs</span>) 
+        :<span>Mode VS bot</span>
+        }
+      </p>
     </div>
   )
 }
