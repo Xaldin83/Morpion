@@ -34,6 +34,8 @@ export default function App(){
 
   function playerBot(){
     setWithBot(!withBot)
+    reset()
+    setScore([0,0])
   }
   
 
@@ -54,28 +56,6 @@ export default function App(){
     return null
   }
 
-  function freeCase(){
-    if(winner)
-      return
-    console.log("le bot réfléchi")
-
-    let caseFree=[]
-    for(let i =0; i<9;i++){
-      if(!board[i])
-        caseFree.push(i)
-    }
-    console.log(caseFree)
-    let choiceCase= Math.floor(Math.random() * caseFree.length)
-    while(board[choiceCase])
-      choiceCase= Math.floor(Math.random() * caseFree.length)
-    console.log(choiceCase)
-      
-    return caseFree[choiceCase]
-  
-
-    
-
-  }
 
   function handleClick(i){
     //Vérificaiton case
@@ -89,8 +69,7 @@ export default function App(){
     const newBoard = [...board] //copie du tableau pour le modifier
     newBoard[i]=isX?'X':'O'
     setBoard(newBoard)
-    if(!withBot)
-      setIsX(!isX)
+    setIsX(!isX)
 
     
     const newWinner = getWinner(newBoard)
@@ -104,7 +83,8 @@ export default function App(){
     if(withBot && !newWinner){
       if(winner)
         return
-      
+      setIsX(!isX)
+
       setIsDisable(true)
       setTimeout(() => {
         console.log("reflexion")
@@ -124,7 +104,8 @@ export default function App(){
       else if(newWinner2==='O')
         setScore(s=>[s[0],s[1]+1])
         setIsDisable(false)
-      }, 3000);
+      setIsX(true)
+      }, 1000);
     }
   }
 
