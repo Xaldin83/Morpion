@@ -63,10 +63,13 @@ export default function App(){
       if(!board[i])
         caseFree.push(i)
     }
+    console.log(caseFree)
     let choiceCase= Math.floor(Math.random() * caseFree.length)
     while(board[choiceCase])
       choiceCase= Math.floor(Math.random() * caseFree.length)
-    return choiceCase
+    console.log(choiceCase)
+      
+    return caseFree[choiceCase]
   
 
     
@@ -98,8 +101,21 @@ export default function App(){
 
     console.log(withBot)
     if(withBot && !newWinner){
-      newBoard[freeCase()]=isX?'O':'X'
-      setBoard(newBoard)
+      if(winner)
+        return
+      console.log("le bot réfléchi")
+
+      let caseFree=[]
+      for(let i =0; i<9;i++){
+        if(!newBoard[i])
+          caseFree.push(i)
+      }
+      console.log(caseFree)
+      let choiceCase= Math.floor(Math.random() * caseFree.length)
+
+      console.log(choiceCase)
+        newBoard[caseFree[choiceCase]]=isX?'O':'X'
+        setBoard(newBoard)
     }
 
   }
