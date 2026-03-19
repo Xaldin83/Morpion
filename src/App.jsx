@@ -53,6 +53,26 @@ export default function App(){
     return null
   }
 
+  function freeCase(){
+    if(winner)
+      return
+    console.log("le bot réfléchi")
+
+    let caseFree=[]
+    for(let i =0; i<9;i++){
+      if(!board[i])
+        caseFree.push(i)
+    }
+    let choiceCase= Math.floor(Math.random() * caseFree.length)
+    while(board[choiceCase])
+      choiceCase= Math.floor(Math.random() * caseFree.length)
+    return choiceCase
+  
+
+    
+
+  }
+
   function handleClick(i){
     //Vérificaiton case
 
@@ -65,12 +85,22 @@ export default function App(){
     const newBoard = [...board] //copie du tableau pour le modifier
     newBoard[i]=isX?'X':'O'
     setBoard(newBoard)
-    setIsX(!isX)
+    if(!withBot)
+      setIsX(!isX)
+
+    
     const newWinner = getWinner(newBoard)
     if(newWinner==='X')
       setScore(s=>[s[0]+1,s[1]])
     else if(newWinner==='O')
       setScore(s=>[s[0],s[1]+1])
+    
+
+    console.log(withBot)
+    if(withBot && !newWinner){
+      newBoard[freeCase()]=isX?'O':'X'
+      setBoard(newBoard)
+    }
 
   }
 
@@ -95,7 +125,9 @@ export default function App(){
       </div>
       <button className="reset" onClick={reset}>Rejouer</button>
 
-      <button className="reset" onClick={playerBot}>Jouer contre le bot</button>
+      <button className="reset" onClick={playerBot}>{!withBot ? (
+        <span>Jouer contre le bot</span>) 
+        :<span>Jouer contre un joueur</span>}</button>
       <p>
         {!withBot ? (
         <span>Mode 2 joueurs</span>) 
