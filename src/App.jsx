@@ -19,6 +19,7 @@ export default function App(){
   const [isX, setIsX] = useState(true)
   const [score, setScore]=useState([0,0])
   const [withBot, setWithBot]=useState(false)
+  const [isDisable,setIsDisable] = useState(false)
 
   const winner = getWinner(board)
   // const {scoresX,scoresY,loading,error}=useScore(winner,scoreX,scoreY)
@@ -103,21 +104,28 @@ export default function App(){
     if(withBot && !newWinner){
       if(winner)
         return
-      console.log("le bot réfléchi")
+      
+      setIsDisable(true)
+      setTimeout(() => {
+        console.log("reflexion")
+        const newNewBoard = [...newBoard] 
+        let caseFree=[]
+        for(let i =0; i<9;i++){
+          if(!newNewBoard[i])
+            caseFree.push(i)
+        }
+        let choiceCase= Math.floor(Math.random() * caseFree.length)
 
-      let caseFree=[]
-      for(let i =0; i<9;i++){
-        if(!newBoard[i])
-          caseFree.push(i)
-      }
-      console.log(caseFree)
-      let choiceCase= Math.floor(Math.random() * caseFree.length)
-
-      console.log(choiceCase)
-        newBoard[caseFree[choiceCase]]=isX?'O':'X'
-        setBoard(newBoard)
+          newNewBoard[caseFree[choiceCase]]=isX?'O':'X'
+          setBoard(newNewBoard)
+        const newWinner2 = getWinner(newNewBoard)
+      if(newWinner2==='X')
+        setScore(s=>[s[0]+1,s[1]])
+      else if(newWinner2==='O')
+        setScore(s=>[s[0],s[1]+1])
+        setIsDisable(false)
+      }, 3000);
     }
-
   }
 
   return (
@@ -134,7 +142,7 @@ export default function App(){
       </p>
       <div className="board">
         {board.map((cell,i)=>(
-          <button key={i} className="cell" onClick={()=>handleClick(i)}>
+          <button disabled={isDisable} key={i} name="pad" className="cell" onClick={()=>handleClick(i)}>
             {cell && <img src={cell==='X'?'/autobot.png':'/decepticon.png'}/>}
           </button>
         ))}
